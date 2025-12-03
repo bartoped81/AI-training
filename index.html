@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Akcelerátor: Interaktivní Průvodce Kurzem</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* Chart Container Styling - STRICT REQUIREMENTS */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 350px;
+            max-height: 400px;
+        }
+        @media (max-width: 640px) {
+            .chart-container {
+                height: 280px;
+            }
+        }
+
+        /* Custom Scrollbar for sleek look */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        /* Animations */
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .pulse-border {
+            animation: pulse-border 2s infinite;
+        }
+        @keyframes pulse-border {
+            0% { border-color: rgba(99, 102, 241, 0.4); box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.4); }
+            70% { border-color: rgba(99, 102, 241, 0); box-shadow: 0 0 0 10px rgba(99, 102, 241, 0); }
+            100% { border-color: rgba(99, 102, 241, 0); box-shadow: 0 0 0 0 rgba(99, 102, 241, 0); }
+        }
+        
+        /* Accordion transition */
+        .accordion-content {
+            transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+        }
+        .accordion-content.active {
+            max-height: 1000px; /* Arbitrary large value */
+            opacity: 1;
+        }
+    </style>
+    <!-- Chosen Palette: Professional Indigo (Slate background, Indigo Primary, Emerald Accents) -->
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans antialiased selection:bg-indigo-100 selection:text-indigo-900">
+
+    <!-- Navigation -->
+    <nav class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-200 shadow-sm">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="font-bold text-xl text-indigo-600 flex items-center gap-2">
+                <span>🚀</span> AI Akcelerátor
+            </div>
+            <div class="hidden md:flex gap-6 text-sm font-medium text-slate-600">
+                <a href="#impact" class="hover:text-indigo-600 transition">Dopad AI</a>
+                <a href="#syllabus" class="hover:text-indigo-600 transition">8 Modulů</a>
+                <a href="#prompting" class="hover:text-indigo-600 transition">Prompting</a>
+                <a href="#automation" class="hover:text-indigo-600 transition">Automatizace</a>
+            </div>
+            <button onclick="scrollToSection('roi')" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg text-sm font-bold transition shadow-lg shadow-indigo-200">
+                Spočítat úsporu
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="container mx-auto px-4 py-16 md:py-24 text-center max-w-4xl">
+        <div class="inline-block bg-indigo-50 text-indigo-700 px-3 py-1 rounded-full text-xs font-bold tracking-wide uppercase mb-4 border border-indigo-100">
+            2denní praktický trénink
+        </div>
+        <h1 class="text-4xl md:text-6xl font-extrabold text-slate-900 leading-tight mb-6">
+            Jak s AI předběhnout trh <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-emerald-500">o parník</span>
+        </h1>
+        <p class="text-lg md:text-xl text-slate-600 mb-10 max-w-2xl mx-auto">
+            Přestaňte o AI jen číst. Začněte ji používat a získejte zpět <strong class="text-slate-900">2 hodiny denně</strong>. Toto není přednáška, ale dílna, kde si nastavíte systémy, které budou pracovat za vás.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            <button onclick="scrollToSection('syllabus')" class="bg-slate-900 text-white px-8 py-4 rounded-xl font-bold hover:bg-slate-800 transition transform hover:-translate-y-1 shadow-xl">
+                Prozkoumat obsah kurzu
+            </button>
+            <button onclick="scrollToSection('prompting')" class="bg-white text-slate-700 border border-slate-200 px-8 py-4 rounded-xl font-bold hover:bg-slate-50 transition flex items-center justify-center gap-2">
+                <span>✨</span> Zkusit AI magii
+            </button>
+        </div>
+    </header>
+
+    <!-- SECTION 1: DATA IMPACT & TARGET AUDIENCE -->
+    <section id="impact" class="bg-white py-16 border-y border-slate-100">
+        <div class="container mx-auto px-4">
+            
+            <!-- Intro Header -->
+            <div class="max-w-3xl mx-auto text-center mb-12">
+                <h2 class="text-3xl font-bold text-slate-900 mb-4">Proč je právě pro vás kurz tak důležitý?</h2>
+                <p class="text-slate-600">
+                    Analýza trhu ukazuje propastný rozdíl mezi firmami využívajícími AI a těmi ostatními. 
+                    Níže vidíte odhadovanou úsporu času na běžných úkolech, které se na kurzu naučíte automatizovat.
+                </p>
+            </div>
+
+            <!-- Chart & Benefits Grid -->
+            <div class="grid md:grid-cols-2 gap-12 items-center mb-12">
+                <div class="bg-slate-50 p-6 rounded-2xl border border-slate-100 shadow-sm">
+                    <h3 class="text-lg font-bold text-slate-800 mb-2 text-center">Úspora času týdně (hodiny)</h3>
+                    <p class="text-xs text-center text-slate-500 mb-4">Srovnání tradiční práce vs. po absolvování kurzu</p>
+                    <div class="chart-container">
+                        <canvas id="timeSavingsChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="space-y-6">
+                    <div class="flex gap-4 items-start">
+                        <div class="bg-indigo-100 text-indigo-600 p-3 rounded-lg text-2xl">⚡</div>
+                        <div>
+                            <h4 class="font-bold text-slate-900 text-lg">Marketingová agentura v kapse</h4>
+                            <p class="text-slate-600 text-sm">Místo týdnů plánování vytvoříte strategii a obsah na 30 dní za 30 minut. Odpadá rutina, zůstává kreativita.</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-4 items-start">
+                        <div class="bg-emerald-100 text-emerald-600 p-3 rounded-lg text-2xl">📊</div>
+                        <div>
+                            <h4 class="font-bold text-slate-900 text-lg">Konec tabulkového pekla</h4>
+                            <p class="text-slate-600 text-sm">Analýza dat, která dříve trvala hodiny, je hotová na jedno kliknutí. AI najde trendy tam, kde vy vidíte jen čísla.</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-4 items-start">
+                        <div class="bg-amber-100 text-amber-600 p-3 rounded-lg text-2xl">🤖</div>
+                        <div>
+                            <h4 class="font-bold text-slate-900 text-lg">Váš první robot</h4>
+                            <p class="text-slate-600 text-sm">Odnesete si funkční automatizaci (např. na faktury), která pracuje 24/7, zatímco vy spíte.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Expandable Audience Section -->
+            <div class="max-w-4xl mx-auto mt-12 border-t border-slate-100 pt-8">
+                <button onclick="toggleAudienceDetails()" class="w-full flex flex-col items-center justify-center group focus:outline-none">
+                    <span class="bg-slate-100 hover:bg-indigo-50 text-slate-700 hover:text-indigo-700 px-6 py-3 rounded-full text-sm font-bold transition flex items-center gap-2 border border-slate-200 group-hover:border-indigo-200">
+                        Jsem cílová skupina? Zjistit více <span id="audience-icon" class="transform transition-transform duration-300">▼</span>
+                    </span>
+                </button>
+
+                <div id="audience-content" class="accordion-content">
+                    <div class="grid md:grid-cols-2 gap-6 mt-8">
+                        <!-- Card 1 -->
+                        <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm hover:border-indigo-200 transition">
+                            <h4 class="font-bold text-slate-800 mb-2 flex items-center gap-2">
+                                <span class="bg-indigo-100 text-indigo-700 p-1 rounded text-xs">🏢</span> Majitelé firem & živnostníci
+                            </h4>
+                            <p class="text-sm text-slate-600">
+                                Pro ty, kteří dělají 10 profesí najednou a potřebují "další pár rukou". Získáte čas na rozvoj byznysu místo operativy.
+                            </p>
+                        </div>
+                        <!-- Card 2 -->
+                        <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm hover:border-indigo-200 transition">
+                            <h4 class="font-bold text-slate-800 mb-2 flex items-center gap-2">
+                                <span class="bg-emerald-100 text-emerald-700 p-1 rounded text-xs">👔</span> Manažeři
+                            </h4>
+                            <p class="text-sm text-slate-600">
+                                Pro ty, kteří chtějí, aby se jejich tým věnoval strategii, ne vyplňování tabulek. Zvýšíte efektivitu celého oddělení.
+                            </p>
+                        </div>
+                        <!-- Card 3 -->
+                        <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm hover:border-indigo-200 transition">
+                            <h4 class="font-bold text-slate-800 mb-2 flex items-center gap-2">
+                                <span class="bg-amber-100 text-amber-700 p-1 rounded text-xs">📈</span> Obchodníci a Marketéři
+                            </h4>
+                            <p class="text-sm text-slate-600">
+                                Pro ty, kteří chtějí prodávat a tvořit, ne trávit hodiny administrativou. Automatizujete rutinu a získáte nové nápady.
+                            </p>
+                        </div>
+                        <!-- Card 4 -->
+                        <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm hover:border-indigo-200 transition">
+                            <h4 class="font-bold text-slate-800 mb-2 flex items-center gap-2">
+                                <span class="bg-purple-100 text-purple-700 p-1 rounded text-xs">🚀</span> Každý, kdo chce růst
+                            </h4>
+                            <p class="text-sm text-slate-600">
+                                AI vás nenahradí. Nahradí vás člověk, který s AI umí lépe než vy. Získejte konkurenční výhodu na trhu práce.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- SECTION 2: INTERACTIVE SYLLABUS -->
+    <section id="syllabus" class="container mx-auto px-4 py-16">
+        <h2 class="text-3xl font-bold text-slate-900 text-center mb-4">Kompletní Osnova: 8 Kroků k Transformaci</h2>
+        <p class="text-center text-slate-600 max-w-2xl mx-auto mb-12">
+            Interaktivní přehled všech modulů. Klikněte pro zobrazení detailů, co se naučíte a co si odnesete.
+        </p>
+
+        <div class="grid lg:grid-cols-2 gap-8 max-w-7xl mx-auto">
+            
+            <!-- Day 1 Column -->
+            <div class="space-y-4">
+                <div class="flex items-center gap-3 mb-6">
+                    <span class="bg-indigo-600 text-white px-3 py-1 rounded font-bold text-sm">DEN 1: Základy & Tvorba</span>
+                </div>
+
+                <!-- Module 1 -->
+                <div class="group border border-slate-200 rounded-xl bg-white hover:border-indigo-300 transition overflow-hidden shadow-sm hover:shadow-md">
+                    <button onclick="toggleAccordion('mod1')" class="w-full text-left p-6 bg-slate-50 group-hover:bg-indigo-50/30 transition">
+                        <div class="flex justify-between items-start gap-4">
+                            <div>
+                                <h4 class="font-bold text-lg text-slate-800 mb-2">1. Řidičák na AI (Nebojte se začít)</h4>
+                                <p class="text-sm text-slate-600 leading-relaxed">
+                                    AI není magie, je to nástroj. A jako každý nástroj potřebuje správný návod. Nemusíte být "technický typ", abyste ji ovládli.
+                                </p>
+                            </div>
+                            <span class="text-indigo-500 transform transition-transform duration-300 mt-1" id="icon-mod1">▼</span>
+                        </div>
+                    </button>
+                    <div id="mod1" class="accordion-content border-t border-slate-100">
+                        <div class="p-6">
+                            <ul class="list-disc list-inside text-sm text-slate-600 space-y-2 mb-4">
+                                <li>Zbavíme vás ostychu a naučíme "mluvit" s AI tak, aby vás poslouchala.</li>
+                                <li>Pochopíte, jak přemýšlí, kde dělá chyby a jak ji navést k perfektnímu výsledku.</li>
+                            </ul>
+                            <div class="bg-indigo-50 border border-indigo-200 rounded p-3 text-sm">
+                                <strong>🏆 Váš výstup: Jistota v ovládání</strong><br>
+                                Budete přesně vědět, kdy AI použít, jak jí zadat úkol a jak poznat, že odvedla dobrou práci.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Module 2 -->
+                <div class="group border border-slate-200 rounded-xl bg-white hover:border-indigo-300 transition overflow-hidden shadow-sm hover:shadow-md">
+                    <button onclick="toggleAccordion('mod2')" class="w-full text-left p-6 bg-slate-50 group-hover:bg-indigo-50/30 transition">
+                        <div class="flex justify-between items-start gap-4">
+                            <div>
+                                <h4 class="font-bold text-lg text-slate-800 mb-2">2. Marketingová agentura v kapse</h4>
+                                <p class="text-sm text-slate-600 leading-relaxed">
+                                    Dochází vám nápady na příspěvky? Platíte drahé agentury za texty, které nemají "duši"? S AI zvládnete práci celého týmu sami.
+                                </p>
+                            </div>
+                            <span class="text-indigo-500 transform transition-transform duration-300 mt-1" id="icon-mod2">▼</span>
+                        </div>
+                    </button>
+                    <div id="mod2" class="accordion-content border-t border-slate-100">
+                        <div class="p-6">
+                            <ul class="list-disc list-inside text-sm text-slate-600 space-y-2 mb-4">
+                                <li>Jak během chvilky vytvořit strategii, texty a poutavou grafiku.</li>
+                                <li>Tvorba krátkých reklamních videí a vizuálů.</li>
+                            </ul>
+                            <div class="bg-indigo-50 border border-indigo-200 rounded p-3 text-sm">
+                                <strong>🏆 Váš výstup: 30 dní obsahu za 30 minut</strong><br>
+                                Kompletní plán příspěvků na celý měsíc (FB, LI, IG) včetně textů a obrázků, hotový dříve, než dopijete kávu.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Module 3 -->
+                <div class="group border border-slate-200 rounded-xl bg-white hover:border-indigo-300 transition overflow-hidden shadow-sm hover:shadow-md">
+                    <button onclick="toggleAccordion('mod3')" class="w-full text-left p-6 bg-slate-50 group-hover:bg-indigo-50/30 transition">
+                        <div class="flex justify-between items-start gap-4">
+                            <div>
+                                <h4 class="font-bold text-lg text-slate-800 mb-2">3. Obchodník, který nezná odmítnutí</h4>
+                                <p class="text-sm text-slate-600 leading-relaxed">
+                                    Bojíte se zvednout telefon? Nevíte, jak reagovat, když klient řekne "je to drahé"?
+                                </p>
+                            </div>
+                            <span class="text-indigo-500 transform transition-transform duration-300 mt-1" id="icon-mod3">▼</span>
+                        </div>
+                    </button>
+                    <div id="mod3" class="accordion-content border-t border-slate-100">
+                        <div class="p-6">
+                            <ul class="list-disc list-inside text-sm text-slate-600 space-y-2 mb-4">
+                                <li>AI jako osobní trenér prodeje pro nácvik těžkých situací.</li>
+                                <li>Psaní perfektních prodejních e-mailů.</li>
+                            </ul>
+                            <div class="bg-indigo-50 border border-indigo-200 rounded p-3 text-sm">
+                                <strong>🏆 Váš výstup: Trenažér námitek</strong><br>
+                                Vyzkoušíte si nanečisto hádku s "virtuálním" nepříjemným klientem. AI vás opraví a naučí argumenty.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Module 4 -->
+                <div class="group border border-slate-200 rounded-xl bg-white hover:border-indigo-300 transition overflow-hidden shadow-sm hover:shadow-md">
+                    <button onclick="toggleAccordion('mod4')" class="w-full text-left p-6 bg-slate-50 group-hover:bg-indigo-50/30 transition">
+                        <div class="flex justify-between items-start gap-4">
+                            <div>
+                                <h4 class="font-bold text-lg text-slate-800 mb-2">4. Váš vlastní Chatbot a Asistent</h4>
+                                <p class="text-sm text-slate-600 leading-relaxed">
+                                    Proč vše vysvětlovat novým kolegům nebo klientům stále dokola? Proč odpovídat na stejné e-maily?
+                                </p>
+                            </div>
+                            <span class="text-indigo-500 transform transition-transform duration-300 mt-1" id="icon-mod4">▼</span>
+                        </div>
+                    </button>
+                    <div id="mod4" class="accordion-content border-t border-slate-100">
+                        <div class="p-6">
+                            <ul class="list-disc list-inside text-sm text-slate-600 space-y-2 mb-4">
+                                <li>Vytvoření AI asistenta, který zná vaše ceníky a firmu.</li>
+                                <li>Nastavení tónu komunikace a produktů.</li>
+                            </ul>
+                            <div class="bg-indigo-50 border border-indigo-200 rounded p-3 text-sm">
+                                <strong>🏆 Váš výstup: Firemní AI Chatbot</strong><br>
+                                Funkční nástroj, který může odpovídat na dotazy vašich zaměstnanců nebo klientů 24/7.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Day 2 Column -->
+            <div class="space-y-4">
+                <div class="flex items-center gap-3 mb-6">
+                    <span class="bg-emerald-600 text-white px-3 py-1 rounded font-bold text-sm">DEN 2: Aplikace & Automatizace</span>
+                </div>
+
+                <!-- Module 5 -->
+                <div class="group border border-slate-200 rounded-xl bg-white hover:border-emerald-300 transition overflow-hidden shadow-sm hover:shadow-md">
+                    <button onclick="toggleAccordion('mod5')" class="w-full text-left p-6 bg-slate-50 group-hover:bg-emerald-50/30 transition">
+                        <div class="flex justify-between items-start gap-4">
+                            <div>
+                                <h4 class="font-bold text-lg text-slate-800 mb-2">5. Webová stránka a kalkulačka</h4>
+                                <p class="text-sm text-slate-600 leading-relaxed">
+                                    Potřebujete nový web pro produkt? Nebo kalkulačku úspor? Dříve práce pro programátora na týden. S AI to zvládnete sami.
+                                </p>
+                            </div>
+                            <span class="text-indigo-500 transform transition-transform duration-300 mt-1" id="icon-mod5">▼</span>
+                        </div>
+                    </button>
+                    <div id="mod5" class="accordion-content border-t border-slate-100">
+                        <div class="p-6">
+                            <ul class="list-disc list-inside text-sm text-slate-600 space-y-2 mb-4">
+                                <li>Tvorba funkčního jednostránkového webu.</li>
+                                <li>Vytváření interaktivních nástrojů bez znalosti kódu.</li>
+                            </ul>
+                            <div class="bg-emerald-50 border border-emerald-200 rounded p-3 text-sm">
+                                <strong>🏆 Váš výstup: Web s kalkulačkou na míru</strong><br>
+                                Hotová stránka, kde si vaši klienti mohou např. spočítat cenu vašich služeb, a vy získáte kontakt.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Module 6 -->
+                <div class="group border border-slate-200 rounded-xl bg-white hover:border-emerald-300 transition overflow-hidden shadow-sm hover:shadow-md">
+                    <button onclick="toggleAccordion('mod6')" class="w-full text-left p-6 bg-slate-50 group-hover:bg-emerald-50/30 transition">
+                        <div class="flex justify-between items-start gap-4">
+                            <div>
+                                <h4 class="font-bold text-lg text-slate-800 mb-2">6. Právník na telefonu</h4>
+                                <p class="text-sm text-slate-600 leading-relaxed">
+                                    Děsí vás dlouhé smlouvy plné malých písmen? Už žádné nevýhodné podpisy.
+                                </p>
+                            </div>
+                            <span class="text-indigo-500 transform transition-transform duration-300 mt-1" id="icon-mod6">▼</span>
+                        </div>
+                    </button>
+                    <div id="mod6" class="accordion-content border-t border-slate-100">
+                        <div class="p-6">
+                            <ul class="list-disc list-inside text-sm text-slate-600 space-y-2 mb-4">
+                                <li>Nahrání složité smlouvy do AI.</li>
+                                <li>Hledání "háčků", které by vás mohly stát peníze.</li>
+                            </ul>
+                            <div class="bg-emerald-50 border border-emerald-200 rounded p-3 text-sm">
+                                <strong>🏆 Váš výstup: Okamžitá právní analýza</strong><br>
+                                AI během minuty najde 3 rizikové body ve smlouvě a navrhne vám bezpečnější formulaci.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Module 7 -->
+                <div class="group border border-slate-200 rounded-xl bg-white hover:border-emerald-300 transition overflow-hidden shadow-sm hover:shadow-md">
+                    <button onclick="toggleAccordion('mod7')" class="w-full text-left p-6 bg-slate-50 group-hover:bg-emerald-50/30 transition">
+                        <div class="flex justify-between items-start gap-4">
+                            <div>
+                                <h4 class="font-bold text-lg text-slate-800 mb-2">7. Datový analytik</h4>
+                                <p class="text-sm text-slate-600 leading-relaxed">
+                                    Máte data v Excelu, ale nevíte, co znamenají? Nebaví vás tvořit grafy ručně?
+                                </p>
+                            </div>
+                            <span class="text-indigo-500 transform transition-transform duration-300 mt-1" id="icon-mod7">▼</span>
+                        </div>
+                    </button>
+                    <div id="mod7" class="accordion-content border-t border-slate-100">
+                        <div class="p-6">
+                            <ul class="list-disc list-inside text-sm text-slate-600 space-y-2 mb-4">
+                                <li>Nahrání tabulky a dotazování se přirozeným jazykem.</li>
+                                <li>Hledání, kde utíkají peníze nebo co se nejlépe prodává.</li>
+                            </ul>
+                            <div class="bg-emerald-50 border border-emerald-200 rounded p-3 text-sm">
+                                <strong>🏆 Váš výstup: Report na jedno kliknutí</strong><br>
+                                Okamžité grafy a závěry, které můžete rovnou poslat managementu nebo klientovi.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Module 8 -->
+                <div class="group border border-slate-200 rounded-xl bg-white hover:border-emerald-300 transition overflow-hidden shadow-sm hover:shadow-md">
+                    <button onclick="toggleAccordion('mod8')" class="w-full text-left p-6 bg-slate-50 group-hover:bg-emerald-50/30 transition">
+                        <div class="flex justify-between items-start gap-4">
+                            <div>
+                                <h4 class="font-bold text-lg text-slate-800 mb-2">8. Váš první robot (Automatizace)</h4>
+                                <p class="text-sm text-slate-600 leading-relaxed">
+                                    Nebaví vás nudná, opakující se práce? Nechte ji robotovi. Na školení si vyberete jeden ze dvou scénářů.
+                                </p>
+                            </div>
+                            <span class="text-indigo-500 transform transition-transform duration-300 mt-1" id="icon-mod8">▼</span>
+                        </div>
+                    </button>
+                    <div id="mod8" class="accordion-content border-t border-slate-100">
+                        <div class="p-6">
+                            <p class="text-sm text-slate-600 mb-3 font-semibold">Vyberte si na školení:</p>
+                            <div class="grid grid-cols-2 gap-3 mb-4">
+                                <div class="bg-slate-100 p-3 rounded text-center text-xs font-bold text-slate-700 border border-slate-200">
+                                    🧾 Možnost A: Fakturový Robot
+                                </div>
+                                <div class="bg-slate-100 p-3 rounded text-center text-xs font-bold text-slate-700 border border-slate-200">
+                                    📢 Možnost B: Marketingový Autopilot
+                                </div>
+                            </div>
+                            <div class="bg-emerald-50 border border-emerald-200 rounded p-3 text-sm">
+                                <strong>🏆 Váš výstup: Funkční automatizace</strong><br>
+                                Scénář, který sám hlídá e-maily nebo publikuje na sítě, zatímco vy spíte.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 3: PROMPT ENGINEERING LAB -->
+    <section id="prompting" class="bg-slate-900 text-white py-16">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold mb-4">Laboratoř Promptů: Zlatý E-mail</h2>
+                <p class="text-slate-400 max-w-2xl mx-auto">
+                    Vyzkoušejte si rozdíl mezi běžným dotazem a expertní technikou, kterou se naučíte. 
+                    Situace: Klient je rozzuřený kvůli zpoždění dodávky.
+                </p>
+            </div>
+
+            <div class="max-w-5xl mx-auto grid md:grid-cols-2 gap-8">
+                <div class="bg-slate-800 rounded-xl p-6 border border-slate-700 opacity-50 hover:opacity-100 transition duration-300">
+                    <div class="flex items-center gap-2 mb-4">
+                        <span class="bg-red-500 text-white text-xs px-2 py-1 rounded font-bold">ZAČÁTEČNÍK</span>
+                        <h3 class="font-bold">Běžný přístup</h3>
+                    </div>
+                    <div class="bg-slate-900 p-4 rounded-lg font-mono text-sm text-slate-300 mb-4 border border-slate-700">
+                        "Napiš omluvu klientovi za zpoždění."
+                    </div>
+                    <button onclick="simulatePrompt('bad')" class="w-full bg-slate-700 hover:bg-slate-600 py-2 rounded text-sm font-bold mb-4 transition">Generovat odpověď</button>
+                    <div id="bad-output" class="text-sm text-slate-400 italic min-h-[100px] border-t border-slate-700 pt-4">
+                        (Výstup se zobrazí zde...)
+                    </div>
+                </div>
+
+                <div class="bg-slate-800 rounded-xl p-6 border border-indigo-500 shadow-lg shadow-indigo-500/20 pulse-border">
+                    <div class="flex items-center gap-2 mb-4">
+                        <span class="bg-indigo-500 text-white text-xs px-2 py-1 rounded font-bold">ABSOLVENT KURZU</span>
+                        <h3 class="font-bold">Technika Role-Context-Task</h3>
+                    </div>
+                    <div class="bg-slate-900 p-4 rounded-lg font-mono text-sm text-indigo-200 mb-4 border border-indigo-900/50">
+                        "Jsi seniorní manažer péče o zákazníky s 10letou praxí. Tvým cílem je uklidnit klienta a udržet si ho. Kontext: Zpozdili jsme se o 3 dny, ale zboží je na cestě. Nabídni 10% slevu. Tón: Empatický, profesionální."
+                    </div>
+                    <button onclick="simulatePrompt('good')" class="w-full bg-indigo-600 hover:bg-indigo-500 py-2 rounded text-sm font-bold mb-4 transition">Generovat Zlatý e-mail</button>
+                    <div id="good-output" class="text-sm text-slate-300 min-h-[100px] border-t border-slate-700 pt-4">
+                        (Výstup se zobrazí zde...)
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 4: AUTOMATION SIMULATOR -->
+    <section id="automation" class="bg-white py-16">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-slate-900 mb-4">Jak funguje "Fakturový Robot"?</h2>
+                <p class="text-slate-600 max-w-2xl mx-auto">
+                    Na kurzu si nastavíte automatizaci, která propojí vaše aplikace. Zde je ukázka logiky, kterou vytvoříme bez programování.
+                </p>
+            </div>
+
+            <div class="max-w-4xl mx-auto bg-slate-50 rounded-2xl p-8 border border-slate-200 relative overflow-hidden">
+                <div class="flex flex-col md:flex-row justify-between items-center gap-4 relative z-10">
+                    <div id="step1" class="w-full md:w-1/3 bg-white p-6 rounded-xl border border-slate-200 shadow-sm text-center transition-all duration-500 transform">
+                        <div class="text-4xl mb-3">📧</div>
+                        <h4 class="font-bold text-slate-800">1. Přijde E-mail</h4>
+                        <p class="text-xs text-slate-500 mt-2">Spouštěč: Nová zpráva s předmětem "Faktura"</p>
+                    </div>
+                    <div class="text-slate-300 text-2xl hidden md:block">➔</div>
+                    <div class="text-slate-300 text-2xl md:hidden">⬇</div>
+                    <div id="step2" class="w-full md:w-1/3 bg-white p-6 rounded-xl border border-slate-200 shadow-sm text-center transition-all duration-500 transform">
+                        <div class="text-4xl mb-3">🧠</div>
+                        <h4 class="font-bold text-slate-800">2. AI Přečte data</h4>
+                        <p class="text-xs text-slate-500 mt-2">Akce: ChatGPT vytáhne IČO, Částku a Datum</p>
+                    </div>
+                    <div class="text-slate-300 text-2xl hidden md:block">➔</div>
+                    <div class="text-slate-300 text-2xl md:hidden">⬇</div>
+                    <div id="step3" class="w-full md:w-1/3 bg-white p-6 rounded-xl border border-slate-200 shadow-sm text-center transition-all duration-500 transform">
+                        <div class="text-4xl mb-3">📊</div>
+                        <h4 class="font-bold text-slate-800">3. Uloží do Excelu</h4>
+                        <p class="text-xs text-slate-500 mt-2">Výsledek: Řádek v tabulce bez vašeho zásahu</p>
+                    </div>
+                </div>
+                <div class="text-center mt-10">
+                    <button onclick="runAutomationDemo()" class="bg-emerald-500 hover:bg-emerald-600 text-white px-6 py-3 rounded-lg font-bold shadow-lg shadow-emerald-200 transition">
+                        ▶ Spustit simulaci
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 5: USE CASE EXPLORER -->
+    <section class="container mx-auto px-4 py-16 border-t border-slate-100">
+        <h2 class="text-3xl font-bold text-slate-900 text-center mb-8">Co to přinese konkrétně vám?</h2>
+        <div class="flex flex-wrap justify-center gap-2 mb-10">
+            <button onclick="filterUseCases('all')" class="filter-btn active bg-slate-800 text-white px-4 py-2 rounded-full text-sm font-bold transition">Vše</button>
+            <button onclick="filterUseCases('marketing')" class="filter-btn bg-white text-slate-600 border border-slate-200 px-4 py-2 rounded-full text-sm font-bold hover:bg-slate-50 transition">Marketing & Video</button>
+            <button onclick="filterUseCases('sales')" class="filter-btn bg-white text-slate-600 border border-slate-200 px-4 py-2 rounded-full text-sm font-bold hover:bg-slate-50 transition">Obchod</button>
+            <button onclick="filterUseCases('admin')" class="filter-btn bg-white text-slate-600 border border-slate-200 px-4 py-2 rounded-full text-sm font-bold hover:bg-slate-50 transition">Administrativa</button>
+        </div>
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6" id="useCaseGrid">
+            <!-- Populated by JS -->
+        </div>
+    </section>
+
+    <!-- SECTION 6: ROI CALCULATOR -->
+    <section id="roi" class="bg-indigo-900 text-white py-16">
+        <div class="container mx-auto px-4">
+            <div class="max-w-4xl mx-auto grid md:grid-cols-2 gap-12 items-center">
+                <div>
+                    <h2 class="text-3xl font-bold mb-4">Vyplatí se vám to?</h2>
+                    <p class="text-indigo-200 mb-6">
+                        Zadejte své údaje a zjistěte, kolik peněz vám může AI ušetřit ročně, pokud získáte zpět slibované 2 hodiny denně.
+                    </p>
+                    <ul class="space-y-3 text-sm text-indigo-100">
+                        <li class="flex items-center gap-2">✅ Osobní Promptbook v ceně</li>
+                        <li class="flex items-center gap-2">✅ Váš vlastní AI Asistent v ceně</li>
+                        <li class="flex items-center gap-2">✅ Šablony automatizace v ceně</li>
+                    </ul>
+                </div>
+                <div class="bg-white text-slate-800 p-6 rounded-2xl shadow-2xl">
+                    <div class="space-y-4 mb-6">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Hodinová sazba / Náklad na hodinu (Kč)</label>
+                            <input type="number" id="hourlyRate" value="500" class="w-full border border-slate-300 rounded p-2 focus:ring-2 focus:ring-indigo-500 outline-none font-mono">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Počet lidí v týmu</label>
+                            <input type="number" id="teamSize" value="1" class="w-full border border-slate-300 rounded p-2 focus:ring-2 focus:ring-indigo-500 outline-none font-mono">
+                        </div>
+                    </div>
+                    <div class="bg-indigo-50 p-4 rounded-xl text-center">
+                        <p class="text-xs text-indigo-600 font-bold uppercase mb-1">Potenciální úspora ročně</p>
+                        <div class="text-3xl font-extrabold text-indigo-700" id="savingsResult">240 000 Kč</div>
+                        <p class="text-xs text-indigo-400 mt-1">*Při úspoře 2h denně / osoba</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-slate-950 text-slate-400 py-8 text-center text-sm">
+        <p>© 2025 AI Akcelerátor. Všechna práva vyhrazena.</p>
+        <p class="mt-2 text-xs">Vytvořeno na základě metodiky kurzu "Jak s AI předběhnout trh o parník".</p>
+    </footer>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // --- 1. CHART.JS VISUALIZATION ---
+        document.addEventListener('DOMContentLoaded', function() {
+            const ctx = document.getElementById('timeSavingsChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Tvorba obsahu', 'Analýza dat', 'E-maily & Admin', 'Právní kontrola'],
+                    datasets: [
+                        {
+                            label: 'Starý způsob (hod/týden)',
+                            data: [10, 5, 8, 3],
+                            backgroundColor: '#cbd5e1', // Slate 300
+                            borderRadius: 4
+                        },
+                        {
+                            label: 'S AI Akcelerátorem (hod/týden)',
+                            data: [1, 0.5, 2, 0.2], // Massive savings
+                            backgroundColor: '#4f46e5', // Indigo 600
+                            borderRadius: 4
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom' }
+                    },
+                    scales: {
+                        y: { beginAtZero: true, title: { display: true, text: 'Hodiny' } }
+                    }
+                }
+            });
+
+            // Initial calculation for ROI
+            calculateROI();
+            
+            // Render Use Cases
+            renderUseCases('all');
+        });
+
+        // --- 2. ACCORDION LOGIC ---
+        function toggleAccordion(id) {
+            const content = document.getElementById(id);
+            const icon = document.getElementById('icon-' + id);
+            
+            if (content.classList.contains('active')) {
+                content.classList.remove('active');
+                icon.style.transform = 'rotate(0deg)';
+            } else {
+                content.classList.add('active');
+                icon.style.transform = 'rotate(180deg)';
+            }
+        }
+
+        // --- 2.1 TARGET AUDIENCE TOGGLE ---
+        function toggleAudienceDetails() {
+            const content = document.getElementById('audience-content');
+            const icon = document.getElementById('audience-icon');
+            
+            if (content.classList.contains('active')) {
+                content.classList.remove('active');
+                icon.style.transform = 'rotate(0deg)';
+            } else {
+                content.classList.add('active');
+                icon.style.transform = 'rotate(180deg)';
+            }
+        }
+
+        // --- 3. PROMPT LAB SIMULATION ---
+        function simulatePrompt(type) {
+            const badOutput = document.getElementById('bad-output');
+            const goodOutput = document.getElementById('good-output');
+
+            if (type === 'bad') {
+                badOutput.innerHTML = '<span class="animate-pulse">Generuji...</span>';
+                setTimeout(() => {
+                    badOutput.innerHTML = '"Vážený zákazníku, omlouváme se za zpoždění. Děláme, co můžeme. S pozdravem, Firma." <br><br><span class="text-xs text-red-400">❌ Příliš obecné, bez empatie, bez řešení.</span>';
+                }, 1000);
+            } else {
+                goodOutput.innerHTML = '<span class="animate-pulse text-indigo-300">Analyzuji roli... Aplikuji kontext... Generuji...</span>';
+                setTimeout(() => {
+                    goodOutput.innerHTML = '"Dobrý den, pane Nováku,<br>naprosto chápu Vaše rozhořčení. Zpoždění 3 dny je nepřijatelné a beru to na sebe. <br><br>Zboží jsem právě ověřil - je na depu a zítra ráno je u Vás. Jako omluvu Vám posílám slevu 10 % na příští nákup.<br><br>S úctou, [Jméno]" <br><br><span class="text-xs text-emerald-400">✅ Empatické, konkrétní, nabízí řešení.</span>';
+                }, 1500);
+            }
+        }
+
+        // --- 4. AUTOMATION VISUALIZER ---
+        function runAutomationDemo() {
+            const step1 = document.getElementById('step1');
+            const step2 = document.getElementById('step2');
+            const step3 = document.getElementById('step3');
+
+            // Reset
+            [step1, step2, step3].forEach(el => {
+                el.classList.remove('border-emerald-500', 'bg-emerald-50', 'scale-105');
+                el.classList.add('border-slate-200', 'bg-white');
+            });
+
+            // Sequence
+            setTimeout(() => {
+                step1.classList.remove('border-slate-200', 'bg-white');
+                step1.classList.add('border-emerald-500', 'bg-emerald-50', 'scale-105');
+            }, 500);
+
+            setTimeout(() => {
+                step1.classList.remove('scale-105');
+                step2.classList.remove('border-slate-200', 'bg-white');
+                step2.classList.add('border-emerald-500', 'bg-emerald-50', 'scale-105');
+            }, 1500);
+
+            setTimeout(() => {
+                step2.classList.remove('scale-105');
+                step3.classList.remove('border-slate-200', 'bg-white');
+                step3.classList.add('border-emerald-500', 'bg-emerald-50', 'scale-105');
+            }, 2500);
+            
+            setTimeout(() => {
+                step3.classList.remove('scale-105');
+            }, 3500);
+        }
+
+        // --- 5. USE CASE DATA & FILTERING ---
+        const useCases = [
+            { cat: 'marketing', icon: '🎨', title: 'Generátor obsahu', desc: 'Plán příspěvků na celý měsíc za 30 minut.' },
+            { cat: 'marketing', icon: '🎥', title: 'Video Scénáře', desc: 'Tvorba scénářů pro Reels/TikTok bez bolesti.' },
+            { cat: 'sales', icon: '🥊', title: 'Trenažér námitek', desc: 'Simulace hádky s klientem nanečisto.' },
+            { cat: 'sales', icon: '🤝', title: 'Obchodní Asistent', desc: 'AI napíše perfektní follow-up e-mail.' },
+            { cat: 'admin', icon: '⚖️', title: 'Právník na telefonu', desc: 'Analýza smluv a hledání "háčků".' },
+            { cat: 'admin', icon: '🧾', title: 'Fakturový Robot', desc: 'Automatické přepisování faktur do tabulek.' },
+            { cat: 'marketing', icon: '🤖', title: 'Marketingový Autopilot', desc: 'Samo-publikování příspěvků na sítě.' },
+            { cat: 'admin', icon: '📊', title: 'Datový Analytik', desc: 'Vysvětlení složitých Excel tabulek česky.' },
+            { cat: 'sales', icon: '🌐', title: 'Web s kalkulačkou', desc: 'Tvorba webu pro produkt za odpoledne.' }
+        ];
+
+        function renderUseCases(filter) {
+            const grid = document.getElementById('useCaseGrid');
+            grid.innerHTML = '';
+            
+            const filtered = filter === 'all' ? useCases : useCases.filter(uc => uc.cat === filter);
+            
+            filtered.forEach(uc => {
+                grid.innerHTML += `
+                    <div class="bg-white p-6 rounded-xl border border-slate-100 hover:shadow-md transition">
+                        <div class="text-3xl mb-3">${uc.icon}</div>
+                        <h4 class="font-bold text-slate-800 mb-1">${uc.title}</h4>
+                        <p class="text-sm text-slate-500">${uc.desc}</p>
+                    </div>
+                `;
+            });
+
+            // Update buttons
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('bg-slate-800', 'text-white');
+                btn.classList.add('bg-white', 'text-slate-600');
+                if ((filter === 'all' && btn.innerText === 'Vše') || 
+                    (filter === 'marketing' && btn.innerText.includes('Marketing')) ||
+                    (filter === 'sales' && btn.innerText.includes('Obchod')) ||
+                    (filter === 'admin' && btn.innerText.includes('Administrativa'))) {
+                    btn.classList.remove('bg-white', 'text-slate-600');
+                    btn.classList.add('bg-slate-800', 'text-white');
+                }
+            });
+        }
+
+        function filterUseCases(cat) {
+            renderUseCases(cat);
+        }
+
+        // --- 6. ROI CALCULATOR ---
+        const rateInput = document.getElementById('hourlyRate');
+        const teamInput = document.getElementById('teamSize');
+        const resultDisplay = document.getElementById('savingsResult');
+
+        function calculateROI() {
+            const rate = parseFloat(rateInput.value) || 0;
+            const team = parseFloat(teamInput.value) || 1;
+            // Logic: 2 hours saved per day * 5 days * 4 weeks * 12 months = 480 hours/year approx.
+            // Conservative estimate: 240 work days * 2 hours = 480 hours.
+            const savedHoursPerYear = 480; 
+            const savings = rate * team * savedHoursPerYear;
+            
+            resultDisplay.innerText = savings.toLocaleString('cs-CZ') + ' Kč';
+        }
+
+        rateInput.addEventListener('input', calculateROI);
+        teamInput.addEventListener('input', calculateROI);
+
+        // --- SCROLL HELPER ---
+        function scrollToSection(id) {
+            document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
